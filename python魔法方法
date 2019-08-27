@@ -1,0 +1,210 @@
+一、魔法方法
+1）__super__方法
+（函数可以调用父类的方法）
+
+class Base:
+    def play(self):
+        super().play()        
+        print('这是Base')
+        
+ class A(Base):
+    def play(self):
+        super().play()        
+        print('这是A')  
+        
+class B(Base):
+    def play(self):
+        super().play()        
+        print('这是B')
+
+class C(A, B):
+
+    def play(self):
+        super().play()
+        打印（'这是Ç')
+
+2）__add__方法
+（可以用来做加法）
+
+class Rectangle:
+
+    def __init__(self,length,width):
+        self.length = length            
+        self.width  = width  
+
+    def area(self):        
+        areas = self.length * self.width        
+        return areas
+
+    def __add__(self, other):        
+        add_length = self.length + other.length        
+        add_width  = self.width + other.width        
+        return add_length,add_width
+a = Rectangle(3, 4)
+b = Rectangle(5, 6)
+a + b
+3）__call__方法
+（能够直接调用实例）
+
+class Rectangle:
+
+    def __init__(self,length,width):
+        self.length = length            
+        self.width  = width  
+
+    def area(self):        
+        areas = self.length * self.width        
+        return areas
+
+    def __call__(self):
+
+        return 'this is  __call__'
+
+class Rectangl:
+
+
+  def __init__(self, length, width):
+        self.length = length
+        self.width = width
+
+  def area(self):
+        areas = self.length * self.width
+        return '面积：%s' % areas
+
+class Sque(Rectangl):
+
+  def __str__(self):
+        return self.area()
+
+c = Sque(2 ,32)                
+print(c)
+4）__str__和__repr__方法
+(str 适合print输出的，对用户比较友好，返回值必须是字符串)
+(repr 输出对python友好，适合eval函数去编译对象。)
+
+class Rectangle:
+
+    def __init__(self,length,width):
+        self.length = length            
+        self.width  = width  
+
+    def area(self):        
+        areas = self.length * self.width        
+        return areas
+
+    def __str__(self): 
+     
+        return 'length is %s, width is %s '%(self.length, self.width)
+
+    def __repr__(self):
+    
+        return 'area  is %s'%self.area(
+5)__ new__方法
+（new方法在实例化最先被调用 用来实现单例模式（节省内存）
+cls 类本身 开辟新的内存空间）
+
+1）class Earth:
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, 'instance'):  # 如果我的类没有实例对象，那我就去new一个实例对象
+            cls.instance = super().__new__(cls)
+        return cls.instance
+
+    def __init__(self):
+        self.name = 'earth'
+
+
+e = Earth()
+print(e)
+a = Earth()
+print(a)
+
+2）class Earth:
+def __new__(cls):       
+    if not hasattr(cls, 'instance'):
+    （先判断一下有没有‘instance’属性 如果没有把夫类的方法用super（）.__new__(cls) 拿过来赋值给新的属性cls.instanec  然后返回return ）   
+    cls.instanec                
+    cls.instance = super().__new__(cls)        
+    return cls.instance
+    
+def __init__(self):      
+    self.name = 'earth'
+
+e = Earth()
+a = Earth()
+print(e, id(e))
+print(a, id(a))
+id 相同
+6）__getattr__方法
+（当属性不存在时，如果定义了此方法，则调用方法）
+
+class Rectangle:    
+    def __init__(self, length, width):  
+        self.length = length
+        self.width = width
+
+    def __getattr__(self, item):
+        return "no attribute"   # 当属性不存在时，调用此方法，如果没有定义此方法报错
+
+    def area(self):
+        areas = self.length * self.width
+        return "面积是：{}".format(areas)
+
+
+a = Rectangle(66, 88)
+print("有属性：", a.length)
+print(a.num)
+7）get、set、__detele__方法
+（类里面实例化另一个类，对这个实例做访问）
+
+class MyAtrribute:    
+         def __get__(self, instance, owner):        
+               print('get')    
+         def __set__(self, instance, value):        
+               print('set')
+         def __delete__(self, instance):        
+               print('del')
+ class MyClass:    
+          m = MyAtrribute()  
+          def __del__(self):        
+               print('instance delete')
+          c = MyClass()
+          c.mc.m = 1
+          del c.m
+8)base	方法
+（查看继承的父类）
+
+9）__dict__方法
+（查看全部属性，返回属性和属性值键值对形式）
+
+10）__doc__方法
+（查看对象文档，即类中的注释(用引号注视的部）
+
+11）__dir__方法
+（查看全部属性和方法）
+
+12）__ unicode__方法
+（方法是在一个对象上调用unicode()时被调用的。因为Django的数据库后端会返回Unicode字符串给model属性，所以我们通常会给自己的model写一个__ unicode__()方法。如果定义了__ unicode__()方法但是没有定义__ str__()方法，Django会自动提供一个__ str__()方法调用 __ unicode__()方法，然后把结果转换为UTF-8编码的字符串对象，所以在一般情况下，只定义__ unicode__()方法）
+
+13）__ len__方法
+（len调用后会调用对象的__ len__函数，我们可以为其定制输出）
+
+14）__ delattr__方法
+（本函数的作用是删除属性，实现了该函数的类可以用del 命令来删除属性）
+
+15）__ setitem__方法
+（该函数可以给对象赋值，我们可以以下标的方式对其进行操作）
+
+16）__ getitem__方法
+（与上函数相反，__ getitem__可以使对象支持已下标的方式获取值，这一类魔法函数对我们来说最大的好处是可以增加代码的优雅程度，并且可以方便的进行流程的控制，上面的例子，我们向操作字典一样在操作一个对象，并且在赋值与取值时都进行了变更，实在是比较好玩。）
+
+17）__ delitem__方法
+（该函数支持以下标方式删除对象数据，实现了这三个函数，这个类就像字典一样，具备了基本的增删查功能，有时候这样写会很方便。）
+
+18）__ iter__方法
+（只要定义了__ iter__()方法对象，就可以使用迭代器访问，这意味着，我们可以迭代我们自己定义的对象）
+
+python的魔法方法--__
+阅读数 320
+
+__init__方法又成为构造方法，创造的方法会被自动的调用以下为相应的__init__方法方法的展示与调用以
+ ———————————————— 
