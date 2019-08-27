@@ -1,0 +1,289 @@
+1）基于分布式文件存储的开源数据库系统。
+
+2）旨在为WEB应用提供可扩展的高性能数据存储解决方案
+
+3)将数据存储为一个文档，文档类似与Json格式，
+
+4)
+
+```
+{
+    name:"小明",
+    age:16，
+    address: {city:"长沙"， country:"china"}
+}
+
+```
+
+#### 五、数据类型
+
+##### 1）类型
+
+![1564387186297](assets/1564387186297.png)
+
+##### 2）MongoDB进入与退出
+
+![1564183945811](assets/1564183945811.png)
+
+```
+进入  mongo   退出  exit
+```
+
+#### 六、文档操作
+
+##### 1）添加文档（数据）
+
+db.集合名称.insert(document             每一条数据，就是一个document，就是一条json
+
+```
+ db.student.insert({name:'xiaoming', age:18})
+添加文档时，如果不指定_id参数
+MongoDB会为文档分配一个唯一的ObjectId
+例： db.student.insert({'_id':1, name:'xiaoming', age:18})
+添加多条文档
+db.student.insert([
+    {name:xiaoming', sex:'男', age:16},
+    {name:’xiaobai', sex:'男', age:18},
+    {name:’moran‘, sex:’女', age:18},
+])
+
+```
+
+##### 2）查询文档（数据
+
+db.集合名称.find([conditions])        MongoDB的条件语句也十分的强大， 接下来的内容可能会引起不适，请做好心里准备
+
+```
+1.查看集合中全部数据： db.student.find()
+2.格式化显示： db.student.find().pretty()
+3.查看满足条件的数据： db.student.find({name:'xiaoming'})
+
+```
+
+##### 3）噩梦条件
+
+| **操作符** | **描述**     |
+| ---------- | ------------ |
+| **$ne**    | **不等于**   |
+| **$gt**    | **大于**     |
+| **$lt**    | **小于**     |
+| **$gte**   | **大于等于** |
+| **$lte**   | **小于等于** |
+
+例子：db.user.find({'age': {'$ne': 45}})
+
+###### 1.and条件       
+
+```
+{$and:[{expression1}, {expression1}, ...]   }
+
+```
+
+###### 2.or条件
+
+```
+{$or:[{expression1}, {expression1}, ...]   }
+
+```
+
+###### 3.and和or混用
+
+```
+db.table.find({$or:[{$and:[{sex:'女'}, {age:18}]},{$and:[{sex:'男'}, {age:{$gt:18}}]}]})
+
+```
+
+##### 4）修改文档（数据）
+
+###### 1.db.集合名称
+
+```
+.update(<query>, <update>, {multi:<boolean>}
+```
+
+
+
+###### 2.修改一条数据
+
+```
+db.table.update({sex:'男'}, {age:20})
+
+```
+
+###### 3.指定属性修改
+
+```
+ { $set: {age:20} }
+ db.table.update({name:'xiaoming'}, {$set: {age:666, sex: 'xx'}} )
+
+```
+
+###### 4.更新集合中所有满足条件的文档
+
+```
+{ multi: true } 
+db.table.update({sex:'男'}, {$set:{sex:'女'}}, { multi:true} )
+```
+
+##### 5）删除文档（数据）
+
+###### 1.db.集合名称
+
+```
+.remove(<query>,  {justOne:<boolean>})
+
+```
+
+###### 2.删除集合中所有的文档
+
+```
+db.table.remove({})
+
+```
+
+###### 3.删除集合中满足条件的所有文档
+
+```
+db.table.remove({sex: '男'})
+
+```
+
+###### 4.只删除集合中满足条件的第一条文档
+
+```
+{ justOne: true } 
+db.table.remove({sex:'男'}, { justOne:true} )
+
+```
+
+#### 七、Python与MogoDB交互
+
+##### 1）安装
+
+```
+pip install pymongo
+
+```
+
+##### 2）建立连接
+
+```
+client = pymongo.MongoClient()
+
+```
+
+##### 3）指定数据库
+
+```
+db = client[数据库名]
+
+```
+
+##### 4）指定集合
+
+```
+collection=db[集合名]
+
+```
+
+##### 5）基本使用
+
+1.查找文档
+
+```
+find()
+```
+
+2.添加文档
+
+```
+insert()
+```
+
+3.修改文档
+
+```
+update()
+```
+
+4.删除文档
+
+```
+remove()
+```
+
+6）要点
+
+1.查找
+
+```
+查找一条文档： find_one()
+查找所有：find()
+```
+
+2.添加
+
+```
+添加一条文档：insert_one
+添加多条：insert_many()
+```
+
+3.删除
+
+```
+删除一条文档：delete_one
+删除多条：delete_many()
+```
+
+4.修改
+
+```
+修改一条文档： update_one
+修改多条：update_many()
+```
+
+##### 6）将Mongodb饰装成类
+
+```
+import pymongo
+
+
+# 1.建立连接
+client = pymongo.MongoClient()
+# 2.指定数据库
+db = client["py_49"]
+# 3.指定集合
+col = db["student"]
+
+# 1.添加文档
+# col.insert_one({"name": "lee", "age": 18, "sex": "M"})
+# col.insert_many([
+#     {"name": "tomas", "age": 15, "sex": "M"},
+#     {"name": "misa", "age": 18, "sex": "F"},
+#     {"name": "meng", "age": 15, "sex": "F"},
+#     {"name": "meixi", "age": 16, "sex": "M"},
+#     {"name": "que", "age": 20, "sex": "M"},
+# ])
+# 2.查找文档
+# res = col.find_one()
+# print(res)
+# res = col.find()
+# print(res)  # <pymongo.cursor.Cursor object at 0x7f1213e26668>
+# for i in res:
+    # print(i)
+
+# 3.修改文档
+# col.update_one({"name": "misa"}, {"$set": {"age": 15}})
+# col.update_many({"age": 15}, {"$set": {"age": 88}})
+
+# 4.删除文档
+# col.delete_one({"name": "misa"})
+# col.delete_many({"age": 88})
+col.delete_many({"$or": [{'name': 'lee'}, {'name': 'meixi'}, {'name': 'que'}]})
+
+res = col.find()
+for i in res:
+    print(i)
+
+```
+
