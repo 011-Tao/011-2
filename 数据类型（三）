@@ -1,0 +1,369 @@
+#### 一，字符串编码
+
+##### 1.发展
+
+计算机其实是只认识0和1的，我们编写的代码，要让计算机认识，中间涉及到字符转换为数字0和1的过程，这个过程实际就是一个字符如何对应一个特定的数字的标准，这个标准就称之为字符编码
+
+0/1 = 1bit
+1byte = 8bit    # 计算机的最小存储单位 0-255的数值
+
+字符编码的发展史00000000
+第一个阶段：
+考虑英文ASCII（英文字符/键盘上的所有字符）
+ASCII码用一个字节代表一个字符
+
+第二个阶段：
+各个国家纷纷定制了自己的字符编码
+GBK使用两个字节（2bytes）代表一个字符 2**16-1 65535
+
+第三个阶段：
+unicode兼容万国语言 使用两个字节（2bytes）代表一个字符
+
+第四个阶段：
+utf-8：对英文字符1byte表示，中文3bytes
+
+# 总结：
+
+1.为了处理英文字符，产生了ASCII码
+2.为了处理中文字符，产生了GBK
+3.为了处理各国字符，产生了Unicode
+4.为了提高存储和传输性能，产生了utf-8
+
+# 重点：python3下字符编码使用情况
+
+unicode：简单粗暴，所有字符都是2bytes，优点字符--》数字的转换速度快，缺点占用空间大
+utf-8：精准，对不同的字符用不同的长度表示，优点：节省空间，缺点：字符--》数字的转换速度慢
+
+python3中字符编码实际类型使用
+1.内存中使用的就是unicode，用空间换时间
+2.硬盘中或者网络传输用utf-8，尽可能节省带宽，保证数据传输的稳定性
+
+#### 编码（encode）和解码（decode）
+
+#### 编码（encode）：将unicode转换为其他指定的编码
+
+#### 解码（decode）：将原编码转换为unicode编码
+
+![1560870168280](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560870168280.png)
+
+##### 2.组成
+
+![1560870190389](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560870190389.png)
+
+```
+s = '中'  # 当程序执行时，字符会以unicode形式保存到内存空间中
+
+# 编码
+s1 = s.encode('utf-8')
+s2 = s.encode('GBK')
+
+print(s)
+print(s1)
+print(s2)
+
+print(type(s))  # <class 'str'>
+print(type(s1))  # <class 'bytes'>
+print(type(s2))  # <class 'bytes'>
+
+# 巩固
+a = '你好潭州'
+
+# unicode--》gbk
+unicode_gbk = a.encode('gbk')
+print(unicode_gbk)
+# unicode--》utf-8
+unicode_utf8 = a.encode('utf-8')
+print(unicode_utf8)
+
+# gbk--->utf-8
+gbk_utf8 = unicode_gbk.decode('GBK').encode('utf-8')
+print(gbk_utf8)
+
+# 总结：
+"""
+1.各个编码的相互转换都要先转换为unicode，通过unicode再转其他编码
+2.GBK不止这一个
+"""
+unicode_gbk = a.encode('gb18030')
+print(unicode_gbk)
+
+```
+
+
+
+#### 二，深浅复制
+
+##### 1.定义
+
+（1）.字符串（数字）：在内存中是一次性创建的，不能直接修改，如需修改，需要重新创建
+（2）.列表等可修改的数据类型：在内存中创建时是以链表的形式创建
+（3）.字符串、数字：赋值、深浅拷贝都没有意义，因为其永远指向同一个内存地址
+（4）.列表、元组、字典
+
+```
+定义如下列表：
+    li = [1, 2, 3]
+    l2 = [‘a’,  li
+```
+
+```
+浅复制：
+    l3  =  l2.copy(
+    # 浅复制:在内存中只额外的创建第一层数据
+import copy
+n3 = copy.copy(n1)
+
+# n1["k1"] = "二月兰"
+# print(n1)
+# print(n3)
+#
+# n1["k3"][0] = "托马斯"
+# print(n1)
+# print(n3)
+```
+
+```
+深复制：
+    import   copy
+    l4  = copy.deepcopy(l2
+    # 深拷贝
+n4 = copy.deepcopy(n1)
+
+n1["k1"] = "勿忘我"
+print(n1)
+print(n4)
+
+n1["k3"][0] = "李贤滂"
+print(n1)
+print(n4)
+
+```
+
+##### 2.赋值
+
+![1560870549916](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560870549916.png)
+
+![1560870560719](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560870560719.png)
+
+![1560870570327](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560870570327.png)
+
+```
+必须掌握：deepcopy
+```
+
+```
+ 赋值:只是创建一个变量，该变量指向原来的内存地址
+n1 = {"k1": 'fei', "k2": 123, "k3": ["fly", 18]}
+# 赋值
+n2 = n1
+
+# n1["k1"] = "李波奇"
+# print(n1)
+# print(n2)
+
+# n1["k3"][0] = "溪日流水"
+# print(n1)
+# print(n2)
+```
+
+
+
+#### 三，bytes和bytearray
+
+##### 1.bytes
+
+```
+指定长度的零填充字节对象:bytes(3)
+```
+
+```
+二进制字符串对象：bytes(b'abc')
+```
+
+```
+print(type("ffff"))
+print(type(b"ffff"))
+# bytes是byte的序列，字符串是字符的序列
+# str---》bytes
+s1 = "中"
+b1 = s1.encode('utf-8')
+print(b1)
+# bytes--->str
+s2 = b1.decode("utf-8")
+print(s2)
+
+# 拓展
+# str---》bytes
+s = '托马斯'
+b1 = bytes(s, encoding='utf-8')
+b2 = bytes(s, encoding='GBK')
+print(b1)
+print(b2)
+
+# bytes--->str
+s1 = str(b1, encoding='utf-8')
+s2 = str(b2, encoding='gbk')
+print(s1)
+print(s2)
+```
+
+
+
+##### 2.bytearray
+
+```
+指定长度的零填充字节对象:bytearray(3)
+```
+
+```
+二进制字符串对象：bytearray(b'abc')
+```
+
+```
+# bytearray
+s1 = "你好，朦胧"
+b1 = bytearray(s1.encode('utf-8'))
+print(b1)
+print(type(b1))
+
+print(b1.decode('utf-8'))
+
+b1[:6] = bytearray("美丽", encoding="utf-8")
+print(b1)
+print(b1.decode('utf-8'))
+
+
+```
+
+#### 四，字符串格式化
+
+##### 1.%方法
+
+| **格式** | **描述**                     |      | **格式** | **描述**                                     |
+| -------- | ---------------------------- | ---- | -------- | -------------------------------------------- |
+| %%       | 百分号标记                   |      | %e       | 浮点数字(科学计数法)                         |
+| %c       | 字符及其ASCII码              |      | %E       | 浮点数字(科学计数法，用E代替e)               |
+| %s       | 字符串                       |      | %f       | 浮点数字(用小数点符号)                       |
+| %d       | 有符号整数(十进制)           |      | %g       | 浮点数字(根据值的大小采用%e或%f)             |
+| %u       | 无符号整数(十进制)           |      | %G       | 浮点数字(类似于%g)                           |
+| %o       | 无符号整数(八进制)           |      | %p       | 指针(用十六进制打印值的内存地址)             |
+| %x       | 无符号整数(十六进制)         |      | %n       | 存储输出字符的数量放进参数列表的下一个变量中 |
+| %X       | 无符号整数(十六进制大写字符) |      |          |                                              |
+
+```
+# %是传统方法，format是python特有
+
+year = 2019
+month = 6
+day = 18
+# 格式化日期
+print('%04d-%02d-%02d' % (year, month, day))    # %02d:输出2位整数，不足位用补住
+
+f = 3.141
+print("%06.2f" % f)  # %06.2f保留宽度为6，小数2位的浮点数，不足位用0补足
+
+print('%o' % 10)
+print('%02x' % 10)
+```
+
+![1560871601962](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871601962.png)
+
+##### 2.format
+
+![1560871636249](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871636249.png)
+
+![1560871652151](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871652151.png)
+
+```
+# format
+test = "name:%s,age:%d,nick_name:%s" % ("狐狸", 18, "星翼")
+print(test)
+test = "name:{},age:{},nick_name:{}".format("狐狸", 18, "星翼")
+print(test)
+
+test = "name:{0},age:{1},nick_name:{0}".format(*["狐狸", 18])
+print(test)
+test = "name:{name},age:{age},nick_name:{name}".format(**{"name": '勿忘我', "age": 18, "height": 168})
+print(test)
+
+test = "numbers: {:b}, {:o}.{:d},{:x},{:X},{:%}".format(10, 10, 10, 10, 10, 10, 10)
+print(test)
+test = "numbers: {num:b}, {num:o}.{num:d},{num:x},{num:X},{num:%}".format(num=10)
+test = "numbers: {0:b}, {0:o}.{0:d},{0:02x},{0:X},{0:%}".format(10)
+print(test)
+print('{:.2f}'.format(3.1415926))
+
+```
+
+
+
+#### 五，数据类型创建及方法补充
+
+##### 1.int
+
+![1560871768055](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871768055.png)
+
+##### 2.str
+
+![1560871810759](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871810759.png)
+
+![1560871822158](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871822158.png)
+
+![1560871846269](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560871846269.png)
+
+```
+d. 字符串总结
+
+d.1、反斜杠可以用来转义，使用r可以让反斜杠不发生转义。两种让\不发生转义的方法(a:print（r‘Ru\nood');b:print（‘Ru\\nood’))
+
+d.2、字符串可以用+运算符连接在一起（该方法效率比较低，不建议使用），用*运算符重复。
+
+d.3、Python中的字符串有两种索引方式，从左往右以0开始，从右往左以-1开始。
+
+d.4、Python中的字符串中字符不能改变。
+
+d.5、print(l[::2]):第三个参数表示步长step
+```
+
+##### 3.字符串的转义
+
+```
+\n	换行
+
+\t	水平制表符
+
+\b	退格
+
+\r	回车，当前位置移到本行开头
+
+\\	代表反斜杠 \
+
+\'	代表一个单引号，同样的 “ ? 等符号也可以这么输出
+
+\0	代表一个空字符
+
+\a	系统提示音
+
+如果去掉字符串的转义，只需要在字符串前面加上  r
+r'abc\tabc'
+
+
+```
+
+##### 4.list
+
+![1560872005687](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560872005687.png)
+
+##### 5.tuple
+
+![1560872030255](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560872030255.png)
+
+##### 6.dict
+
+![1560872058999](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560872058999.png)
+
+![1560872067369](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560872067369.png)
+
+##### 7.set
+
+![1560872091502](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560872091502.png)
