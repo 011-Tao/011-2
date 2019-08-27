@@ -1,0 +1,420 @@
+#### 一，函数基础
+
+（1），函数的定义
+
+def  函数名(参数)：
+        pass           return    表达式
+
+函数名命名规则： 字母、数字和下划线组成，和变量命名规则一致
+
+return 后面可以返回任意表达式，但不能是赋值语句
+
+return：
+
+注意 return 和 print 的区别，return是函数的返回值，返回值可以赋值给变量，而print只是打印出来
+
+#### 二，函数参数
+
+（1），必备参数：
+
+```
+1.def  func(x):
+	pass
+	
+2.def  func(x):
+	print(x)
+    func(1)
+```
+
+（2），默认参数：
+
+```
+1.def  func(x, y=None):
+	pass
+	
+2.def  func(x, y=None):
+	 print(x)
+	 print(y)
+func(1)
+func(1, 2)
+```
+
+(3),不定长参数：
+
+```
+def  func(*args, **kwargs):
+	pass
+	
+	def  func(*args, **kwargs):
+	print(args)
+	print(kwargs)
+func(1, 2, 3, a=4, b=5, c=6)
+func(*(1, 2, 3), **{'a': 4, 'b': 5, 'c': 6})
+```
+
+```
+python中参数无类型，参数可以接受任意对象，只有函数中代码才会对参数类型有限制
+```
+
+#### 三，常见内置函数
+
+##### （1）.内置查看
+
+```
+内置对象查看：
+	dir(__builtins__)
+```
+
+##### （2）.常见函数
+
+```
+len	求长度
+	min	求最小值
+	max	求最大值
+	sorted	排序
+	reversed	反向
+	sum	求和
+	
+way_1 = [16, 23, 45, 19]
+print(len(way_1))                #  长度  4
+print(max(way_1))                #  最大 45
+print(min(way_1))                #  最小 16
+print(sorted(way_1))             #  正序 16, 19, 23, 45]
+print(list(reversed(way_1)))     #  反序 [19, 45, 23, 16]
+```
+
+##### （3）.进制转转换函数
+
+```
+bin	转换为二进制
+	oct	转换为八进制
+	hex	转换为十六进制
+	ord	字符转ASCII码
+	chr	ASCII码转字符
+```
+
+##### （4）.高级内置函数
+
+```
+1.enumerate    返回一个可以枚举的对象
+2.eval     
+取出字符串中的内容
+将字符串str当成有效的表达式来求指并返回计算结果
+3.exec     执行字符串或complie方法编译过的字符串
+4.filter    过滤器
+5.map     
+对于参数iterable中的每个元素都应用fuction函数，并将结果作为列表返回
+6.zip       将对象逐一配对
+
+print(list(enumerate(way_1)))    #  枚举 [(0, 16), (1, 23), (2, 45), (3, 19)]
+way_2 = '1 + 2 + 3'
+print(eval(way_2))               #  将字符转化为表达式 并返回值 6
+def func(x):
+    return x > 5
+
+l = [2, 5, 7, 9, 12]
+print(list(filter(func, l)))   # 过滤 [7, 9, 12]
+def func1(y):
+    return y * 10
+
+
+l = [2, 3, 6, 5]
+print(list(map(func1, l)))      #   [20, 30, 60, 50]
+
+t = [1, 2, 3]
+t1 = ['a', 'b', 'c']
+print(list(zip(t, t1)))         #配对  [(1, 'a'), (2, 'b'), (3, 'c')]
+
+```
+
+### 二，控制流程
+
+#### 一，程序三大流程
+
+##### （1）.顺序执行
+
+```
+# 控制流程
+print('----1-----')
+print('----2-----')
+print('----3-----')
+
+```
+
+##### （2）.选择流程
+
+```
+a = 5
+if a > 3:
+    print('a > 3')
+elif a == 3:
+    print('a == 3')
+else:
+    print('a < 3')
+print('ok')
+
+"""
+if 条件1：
+    条件1成立，需要做的事情
+elif 条件2：
+    条件2成立，需要做的事情   
+elif 条件3：
+    条件3成立，需要做的事情 
+...
+else:
+    以上条件都不满足时，需要做的事情         
+"""
+age = 19
+
+if age > 18:
+    print("----0----")
+    print("----1----")
+    print("----2----")
+    print("----3----")
+    print("----4----")
+    print("----5----")
+print('----6----')
+
+# ++++++（缩进代表的就是包含关系）++++++
+```
+
+##### （3）.循环流程
+
+```
+ while循环
+# a = 8
+# if a > 5:
+#     print('aaa')
+# a = 8
+# while a > 5:
+#     print('aaa')
+
+# 打印1到10所有数字
+# i = 1
+# print(i)
+# i += 1
+# print(i)
+# i += 1
+# print(i)
+# i += 1
+# print(i)
+# i += 1
+# print(i)
+
+i = 1
+while i <= 10:
+    print(i)
+    i += 1  # 没有i += 1就死循环
+
+"""
+while 条件：
+    条件满足的时候执行的事情
+    
+先判断，再执行，执行完后再回到判断，直到判断条件不成立，运行结束    
+"""
+
+li = [1, 3, 5, 7, 9, 11, 2, 8]
+# i = 0
+# print(li[i])
+# i += 1
+# print(li[i])
+# i += 1
+# print(li[i])
+# i += 1
+# print(li[i])
+print("="*20)
+i = 0
+# while i < len(li):
+#     if li[i] > 5:
+#         print(li[i])
+#     else:
+#         print(False)
+#     i += 1
+
+while i < len(li):
+    print(li[i]) if li[i] > 5 else print(False)
+    i += 1
+
+a = ['hello', 'world', '!']
+print(a[0], a[1], a[2])
+print('----1----', end='**')
+print('----2----', end='**')
+print('----3----', end='**')
+```
+
+##### （4）.循环跳出
+
+```
+跳出循环break、continue
+li = [1, 3, 5, 7, 9, 11, 2, 8]
+
+i = 0
+while i < len(li):
+    if li[i] == 5:
+        # break   # 跳出循环，程序终止，后面的将不再输出
+        i += 1
+        continue    # i值进入判断后，continue，推到while，而i值始终没有变化，再次进入判断，重复之前的动作，死循环
+    if li[i] > 5:
+        print(li[i])
+    else:
+        print(False)
+    i += 1
+
+# break跳出循环，程序终止
+# continue跳出当前循环，进入下一次循环，注意：判断条件
+print("="*20)
+li = [1, 3, 5, 7, 9]
+i = 0
+while i < len(li):
+    if li[i] == 5:
+        i += 1
+        continue
+    print(li[i])
+    i += 1
+else:
+    print('----end----')
+# else可以跟在while的后面，但是只有循环结束才会执行else，如果循环是被break掉的，那么这个else就不会执行
+```
+
+##### （5）.拓展
+
+```
+ a = int(input('请输入你的年龄：'))   # input进来一定是一个字符串
+# print(type(a))  # <class 'str'>
+# if a <= 18:
+#     print("少先队员")
+# elif 40 > a > 18:
+#     print('青少年')
+# else:
+#     print("成熟人士")
+
+```
+
+##### （6）.三目运算
+
+```
+a = 6
+if a > 5:
+    print(True)
+else:
+    print(False)
+
+# 语法糖：三目运算、装饰器、lambda
+
+a = 6
+print(True) if a > 5 else print(False)
+# 成立执行值1 if 判断语句 else 不成立执行值2
+# 简单的判断，写几行太麻烦，就可以使用三目运算写成一行
+```
+
+### 三，遍历（for）
+
+##### 注意：可以被for循环取值的就是可迭代对象
+
+#### 一，列表（list）
+
+```
+li = [1, 3, 5, 7, 9]
+for i in li:（迭代循环for将li里的值付到i）
+    print(i)
+
+print("="*20)
+```
+
+#### 二，元组（）
+
+```
+tu = (1, 3, 5, 7, 9)
+for i in tu:
+    print(i)
+
+print("="*20)
+```
+
+#### 三，集合（set）
+
+```
+se = {'k1', 'k2', 'k3'}
+for i in se:
+    print(i)
+```
+
+#### 四，字典（dict）
+
+```
+# 字典
+dic = {'k1': 'v1', 'k2': 'v2', 'k3': 'v3'}
+for k, v in dic.items():
+    print(k, v)
+
+print("="*20)
+li = [1, 3, 5, 7, 9, 1, 3, 5, 7, 9, 1]
+for i in li:
+```
+
+#### 五， 可迭代
+
+##### （1）.DIR
+
+```
+  # li.append(i)
+    print(i)
+# 如果是可变对象，一定不要再循环的往里面插入东西
+
+# 怎么判断一个对象是不是可迭代对象：1.直接放到for里面2.如果一个对象有'__iter__'方法，它就是可迭代的
+
+print(dir(li))
+"""
+['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+
+"""
+```
+
+##### （2）.Range
+
+```
+# range()（取起始值到结束值的范围）
+# li.append("a")
+# del(li[2])
+#    range(stop) -> range object
+#    range(start, stop[, step]) -> range object
+# 表示的是一个范围
+
+print(list(range(5)))   # [0, 1, 2, 3, 4]
+print(list(range(1, 5)))   # [1, 2, 3, 4]
+print(list(range(1, 5, 2)))   # [1, 3]
+
+# for i in range(1, 21):
+#     print(i)
+
+# 跳出循环
+for i in range(1, 21):
+    if i % 5 == 0:
+        break   # 跳出整个循环，程序终止
+        # continue    # 跳出当前循环，进入下一次循环
+    print(i)
+else:
+    print("----end----")
+
+# for break/continue/else 同while
+```
+
+六.
+
+```
+find -name 'haha.py' -exec rm -rf {} \;  # 删除当前目录下名字为haha.py的文件
+find -name 'haha.py' | xargs rm    # 删除当前目录下名字为haha.py的文件
+find -name '*.py' | xargs grep test      # 找到目录下所有的py文件，然后再筛选出文件内容中包含test的文件
+
+
+cat >文件名：编写文件内容 ctrl+z退出
+cat 文件名：查看文件内容
+
+# 输入输出重定向
+# 输入重定向：输入不来自于键盘，来自于指定文件，改变了输入源
+语法形式：cat<文件名
+
+# 输出重定向：输出不显示在屏幕上，而是写入指定文件
+语法形式：“命令>文件名”
+```
+
