@@ -1,0 +1,154 @@
+#### 一、查看数据类型的方法：
+
+python基本数据类型包括了：数字类型、布尔值（bool）、字符串(str)
+
+##### 1.type：查看数据类型
+
+```
+temp = 'hello'
+t = type(temp)
+print(t)
+# Ctrl+鼠标左键单击str，找到str类及内部的所有方法
+```
+
+##### 2.help，type：查看数据类型下的全部方法
+
+```
+help(type(temp))
+```
+
+##### 3.dir：查看类下全部方法的名字
+
+```
+d = dir(temp)
+print(d)
+```
+
+##### 4.查看类下某特定方法
+
+```
+temp.upper()	# Ctrl+鼠标左键单击upper（），自动定位到upper（）方法
+```
+
+#### 二、数字类型
+
+##### 1.整数类型int
+
+```
+a=88 #10进制      b=0b1110 #2进制     c=0o65 #8进制    d=0xa5c #16进制
+print（'a的数据类型是：'，type（a）） a的数据类型是：<class'int'>
+print（'b的数据类型是：'，type（b）） b的数据类型是：<class'int'>
+print（'c的数据类型是：'，type（c）） c的数据类型是：<class'int'>
+print（'d的数据类型是：'，type（d）） d的数据类型是：<class'int'>
+整数类型，理论取值范围[-无穷，+无穷]，实际取值范围受限于运行的计算机的内存大小。
+32位机器，-2**31~2**31-1   64位机器，-2**61~2**61-1
+```
+
+```
+ 数据类型的创建
+# 1.int
+n = 122
+n = int('122')
+print(type(n))
+```
+
+##### 2.浮点型float
+
+```
+a=3.14156  b=9.8e-2   c=0.1+0.2
+print（a）  3.14156   print（'a的类型是：'，type（a））   a的类型是：<class‘float’>
+print（b） 0.098    print（'b的类型是：'，type（b））   b的类型是：<class‘float’>
+print（c）  0.3000000000004 print（'c的类型是：'，type（c））   a的类型是：<class‘float’>
+
+```
+
+
+
+##### 3.复数complex
+
+```
+ Python语言中，复数的虚数部分通过后缀“J”和“j”来表示，例如：                         	12.3+4j
+     复数类型中实数部分和虚数部分的数值都是浮点类型。对于复数z，可以用z.real和z.imag分别获得它的实数部分和虚数部分。
+两个参数时，前后不允许由字符串的数字
+```
+
+
+
+#### 三、布尔值（bool）
+
+False(所有空字符串（”“），空列表（[]）,空字典（{}），空元组（），所有值位0：0（整数），0.0（浮点数），0.0+0.0j（复数）)则其他为True
+
+None，False （注意：这两个加上引号为字符串会输出True）
+
+![1560442340310](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560442340310.png)
+
+#### 四、字符串（str）
+
+##### 1.查看和使用方法
+
+​	字符串是字符的序列表示，可以由一对单引号(')，双引号(“)或三引号(''')构成。
+
+​	其中单引号和双引号都可以表示单行字符串，两者作用相同。使用单引号时，双引号可以作为字符串的一部分，反之亦然。
+
+​	三引号可以表示单行或多行字符串。
+
+| int(x)          | 将x转换为整数，x可以是浮点数或字符串                         |
+| --------------- | ------------------------------------------------------------ |
+| float(x)        | 将x转换为浮点数，x可以是整数或字符串                         |
+| complex(re, im) | 生成一个复数，实部为re，虚部为im，re可以是整数，浮点数或字符串，im可以是整数或浮点数但不能为字符串，im没有时，默认为0 |
+
+##### 2.常用方法
+
+```
+a= 'abcdab'    
+a.count('a')   统计a出现的次数
+a.index('a')   a的索引值
+a.find（'a'）    查找  不会报错
+a.isdigit()     判断是否都是数字
+a.isalpha()      判断是否都是字母
+a.endswith()      判断以什么结尾
+a.startswith()    判断以什么开头
+a.islower()     判断是否小写
+a.isupper()    判断是否大写
+a.upper()      变成大写
+a.lower() 变成小写
+a.title()       修改
+a.replace      替换
+%s(占位符)   '%s %s'%('','')   将字符串拼接
+''.join(['hello','python'])     以（空格|。。）拼接成字符串
+'{} {} {}'.format('hello','word','python')  有几个{}就几个字符串 拼接
+
+python  官网：python.org  找DOCS文档    找到搜所找到方法
+```
+
+1.移除空白a.strip（）  分割a.split（）  长度len（）  索引s[0],s[1]....
+
+切片s[0:2
+
+![1560442610670](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560442610670.png)
+
+![1560442643705](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1560442669148.png)
+
+| **方法名**                   | **返回值** | **含义**                              | **案例**                                                 |
+| ---------------------------- | ---------- | ------------------------------------- | -------------------------------------------------------- |
+| partition(sep)               | tuple      | 将字符串分割为前，中（sep），后三部分 | "hello-world".partition("-")返回;('hello', '-', 'world') |
+| replace(old, new[, count])   | str        | 替换                                  | "hello-world".replace('-', '/’)返回：'hello/world’       |
+| split(sep=None, maxsplit=-1) | list       | 分割， maxsplit最多分割几次           | "hello-world".split("-")返回;['hello', 'world']          |
+
+索引取值，切片
+
+​         索引a[0],a[1]....
+
+```
+a=“hello，hz”  print（a[1]）   e
+```
+
+长度len（）
+
+```
+print（len（a））   8
+```
+
+切片a[0:2]
+
+变量[头下标：尾下标]，不包括尾下标（包头不包尾）
