@@ -1,0 +1,185 @@
+#### 一，数据库简介
+
+##### 1）简介
+
+```
+数据库：计算机系统中一种提供数据存储和检索的一种软件
+```
+
+```
+数据库分类：
+关系型数据库（sql）：建立在关系模型上的数据库。
+是由多张能互相连接的二维行列表格组成的数据库。
+SQL（结构化查询语言）专为数据库而建立的操作命令集。Structured Query Language 结构化查询语言
+语法通用
+存储方式固定 安全
+
+非关系型数据库（nosql）：Not Only SQL。
+语法基本都不一样
+redis，mongodb
+存储方式灵活，存储数据的效率比较快，不大安全。
+```
+
+##### 2）关系型数据库（mysql）
+
+![QQ截图20190810104225](photo/QQ截图20190810104225.png)
+
+##### 3）非关系型数据库（ MongoDB）
+
+![39](photo/39.png)
+
+
+
+##### 二、MySQL基本结构
+
+##### 1）特点
+
+```
+MySQL是数据库管理软件。
+关系型数据库管理系统：采用关系模型来组织管理数据的数据库系统
+把数据保存在不同的表中，而不是将数据放在一个大仓库中
+可以运行于多个系统上，并且支持多种编程语言，包括C、C++、Python、Java、Perl、PHP、Ruby等
+
+```
+
+##### 2）基本格式
+
+![40](photo/40.png)
+
+​                                                                      *库*
+
+##### 3）基本数据
+
+![41](photo/41.png)
+
+##### 三、MySQL库级表级操作
+
+##### 1）注意事项
+
+```
+1.不严格区分大小写
+2.必须要加；结束  或者\g
+3.任何数据都有自己的数据类型
+4.创建表的时候最后一行不需要逗号
+
+```
+
+##### 2）mysql的进入与退出
+
+```
+mysql –uusername -ppassword
+mysql> exit
+
+```
+
+![42](photo/42.png)
+
+##### 3）库级操作语句
+
+```
+# 库级操作
+show databases;
+create database py_49;
+drop database py_49;
+use py_49;
+```
+
+![43](photo/43.png)
+
+##### 4）表级操作语句
+
+```
+# 表级
+show tables;
+create table test;
+create table test (name varchar(20),age int,sex char(20));
+drop table test;
+```
+
+![44](photo/44.png)
+
+
+
+##### 四、MySQL表中数据的操作(增删改查)
+
+##### 1）插入数据
+
+![45](photo/45.png)
+
+【insert into】  表格名  【 values 】(4,'yan',16,'F','four class');     指定字段插入 
+
+【insert into】 表格名 【 values 】 (all_values);                        全字段插入
+
+【insertinto】表格名    (field_name) 【 values 】(1,'fei',18,'F','one class'),(4,'yan',16,'F','four class');          多行插入
+
+##### 2）查询数据
+
+![46](photo/46.png)
+
+【select】  sex='M' from    表格名;       指定字段查询
+
+【select*from】     表格名 ;             全字段查询
+
+【select】*【from】   表格名【 where】    sex='M'; 
+
+
+
+##### 3）修改数据
+
+![47](photo/47.png)
+
+【update】表格名 【set】name=''      修改所有数据
+
+【update】表格名 【set】field_1=value_1, field_2=value_2 …    修改多个
+
+【update】表格名  【set】 要改的 【 where】被改的;   修改满足条件的数据
+
+注意：一定要写where条件，不然会修改表中全部数据
+
+##### 4）删除数据
+
+![48](photo/48.png)
+
+ 【delete】【from 】tb_name         删除表中所有数据  
+
+【delete】【from 】  tb_name  【 where】  conditions;    删除表中满足条件的数据
+
+注意：一定要写where条件，不然会删除表中全部数据
+
+##### 五、MySQL数据类型（了解）
+
+##### 1）类型
+
+```
+数值型、字符类型、时间日期类型
+
+```
+
+##### 2）数值类型
+
+![49](photo/49.png)
+
+##### 3）字符类型
+
+![50](photo/50.png)
+
+##### 4）时间日期类型
+
+![51](photo/51.png)
+
+##### 5）案例
+
+```
+create table tb2(
+     id int,			
+     name varchar(20), 		#指定长度，最多65535个字符。   变长字符串
+     sex  char(4),         		#指定长度，最多255个字符。     定长字符串
+     price double(4,2),		#双精度浮点型，m总个数，d小数位
+     detail text,			#可变长度，最多65535个字符
+     dates datetime,		#日期时间类型 YYYY-MM-DD HH:MM:SS
+     ping  enum('好评','差评’)  	#枚举， 在给出的value中选择
+     
+     insert into tb value (1, '裤子', '男', 20.0, '这条裤子超级好！！！', now(), '好评');
+
+```
+
