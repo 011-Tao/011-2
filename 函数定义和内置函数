@@ -1,0 +1,313 @@
+#### 1.函数基础
+
+##### 1）函数定义
+
+![37](photo/37.png)
+
+```
+def （定义函数） func（函数名） （参数）：
+def func（）：
+    pass（占位符）
+def func（）：
+    return  返回值 终止符
+func（）    调用函数
+ def func(a, b)：
+     return
+  a = func（12，3）
+  print（a）
+```
+
+#####
+
+1.常见函数：
+	len	求长度
+	min	求最小值
+	max	求最大值
+	sorted	排序
+	reversed	反向
+	sum	求和
+
+2.进制装换函数
+
+进制转换函数：
+	bin	转换为二进制
+	oct	转换为八进制
+	hex	转换为十六进制
+	ord	字符转ASCII码
+	chr	ASCII码转字符
+
+```
+# 进制转换函数
+print(bin(10))  # 0b1010
+print(oct(10))  # 0o12
+print(hex(10))  # 0xa
+
+
+```
+
+
+
+#### 2.函数的调用
+
+函数名（参数1，参数2.。。。。。。）
+
+只要函数在内存已经存在，那么在程序的任何位置都是可以调用的
+
+（1）定义参数：     必备参数     默认参数      不定长参数
+
+（2）参数的调用：位置参数      关键字参数
+
+（3）在python中参数无类型，参数可以接受任意对象，只有函数中代码才会对参数类型有限制
+
+##### 1.参数
+
+```
+必备参数：
+def  func(x):
+	pass
+默认参数：
+def  func(x, y=None):
+	pass
+	不定长参数：
+def  func(*args, **kwargs):
+	pass
+必备参数：
+def  func(x):
+	print(x)
+	
+	
+func(1)
+默认参数：
+
+def  func(x, y=None):
+	 print(x)
+	 print(y)
+
+func(1)
+func(1, 2)
+不定长参数：
+
+def  func(*args, **kwargs):
+	print(args)
+	print(kwargs)
+
+
+func(1, 2, 3, a=4, b=5, c=6)
+func(*(1, 2, 3), **{'a': 4, 'b': 5, 'c': 6})
+
+```
+
+
+
+##### 2.函数参数
+
+```
+def sum(y, a, b, c=666):   # a, b, c形式参数，简称形参，函数没有调用时，它没有任何意义，调用时，它必须传入参数，所以也叫必须参数。
+    result = a + b + c
+    print("a:", a)
+    print("b:", b)
+    print("c:", c)
+    print(result)
+
+
+"""
+def sum(a, b, c=666):   # c=666默认参数，不传入实参时，形参默认为666，但是，你如果传入实参，它也能接收
+# 注意：默认参数一定要写在必须参数的后面，语法规则
+"""
+
+# sum(11, 22)
+sum(25, b=11, c=22, a=33)  # 11, 22, 33实际参数，简称实参，按照位置，与形参一一对应，所以它也叫位置参数
+
+"""
+sum(b=11, c=22, a=33)   # b=11, c=22, a=33关键字参数，函数参数会通过关键字去找，不需要一一对应
+# 注意：关键字参数和位置参数一起使用时，关键字参数必须要写在位置参数的后面，这是语法
+"""
+```
+
+```
+# 动态参数。
+# def f1(*args, **kwargs):
+"""
+*args, **kwargs
+星号是关键字
+args，kwargs是变量名，规范
+调用函数时，所有传入的 多余的 位置参数都会被args接收生成一个元组
+调用函数时，所有传入的 多余的 关键字参数都会被kwargs接收生成一个字典
+"""
+def sum(a, *args):
+    print(a)
+    # result = 0
+    print(args)
+    print(type(args))   # <class 'tuple'>
+    # for i in args:
+    #     print(i)
+    #     result += i
+    # print("result:", result)
+    # return result
+
+
+# sum(5, 6, 7, 8, 9)
+
+def sum1(f, **kwargs):
+    print(f)
+    print(kwargs)
+    print(type(kwargs))
+
+
+sum1(a=5, c=6, b=7, f=8, g=9)
+
+
+# 第一种：
+def f1(*args):
+    print(args, type(args))
+
+
+f1(123, 456)
+
+
+# 第二种
+def f2(**kwargs):
+    print(kwargs, type(kwargs))
+
+
+f2(k1=123, k2=456)
+
+
+# 混合使用：
+def f3(p, *args, **kwargs):
+    print(p, type(p))
+    print(args, type(args))
+    print(kwargs, type(kwargs))
+
+
+f3(11, 22, 33, k1=123, k2=456)
+
+
+# 为动态参数传入列表、字典、元组
+# 列表
+def f1(*args):
+    print(args, type(args))
+
+
+li = [11, 22, 33]
+f1(li, 233)  # ([11, 22, 33], 233) <class 'tuple'>
+f1(*li, 233)  # (11, 22, 33, 233) <class 'tuple'>
+
+
+def f2(**kwargs):
+    print(kwargs, type(kwargs))  # {'k1': 123, 'k2': 456} <class 'dict'>
+
+
+dic = {'k1': 123, 'k2': 456}
+# f2(dic=dic)
+f2(**dic)
+
+# 形参，必须参数，默认参数，*args，**kwargs。实参，位置参数，关键字参数。
+
+
+```
+
+##### 3.内置函数（见附件--07-python3内置函数大全 (1).html）
+
+##### 1.内置函数的查看
+
+```
+# li = dir(__builtins__)
+# li = li[li.index('abs'):]
+#
+# for i in range(len(li)):
+#     print("#{}.{}()".format(i + 1, li[i]))
+
+li = [9, 2, 5, 8]
+print(len(li))
+print(min(li))
+print(max(li))
+print(sum(li))
+print(sorted(li))
+print(list(reversed(li)))
+```
+
+##### 2.中高级内置函数
+
+```
+# enumerate # 返回一个可以遍历的对象
+可以列举枚举对象一一对应
+print(enumerate(li))    # <enumerate object at 0x000001FD47172CF0>
+
+for i in enumerate(li):
+    print(i)
+
+print(dict(enumerate(li)))
+
+# eval()    # 识别表达式，返回值  将字符转化表达式
+b = '1 + 2 + 3'
+print(eval(b))
+
+# exec()  # 识别赋值语句，没有返回值  
+b = 'x + y + z'
+x = 1
+y = 2
+z = 3
+print(eval(b))
+
+s = """
+z = 10
+b = x + y + z
+print(b)
+print("ok")
+"""
+# x = 1
+# y = 2
+# exec(s)
+# exec(s, {'x': 1, 'y': 2})
+exec(s, {'x': 1, 'y': 2}, {'x': 5, 'y': 6})
+
+# filter() 过滤器
+# i = filter(函数，可迭代对象)
+# 过滤，每个可迭代对象去执行函数，符合条件的留下，不符合的删去
+
+
+def test(x):
+    return x > 5
+
+
+l1 = [10, 2, 5, 15, 8]
+print(filter(test, l1))  # <filter object at 0x000001AE08A2B7F0>
+print(list(filter(test, l1)))
+
+
+# map :每个可迭代对象去执行函数,是对数据的处理，将结果返回
+def func(num):
+    return num * 10
+
+
+l2 = [1, 2, 3]
+print(map(func, l2))    # <map object at 0x000001848837B908>
+print(list(map(func, l2)))    # [10, 20, 30]
+
+# zip：将对象逐一的配对
+l3 = ['k1', 'k2', 'k3']
+l4 = ['v1', 'v2', 'v3']
+print(zip(l3, l4))  # <zip object at 0x000002047F7AB408>
+print(dict(zip(l3, l4)))    # {'k1': 'v1', 'k2': 'v2', 'k3': 'v3'}
+
+
+```
+
+```
+find -name 'haha.py' -exec rm -rf {} \;  # 删除当前目录下名字为haha.py的文件
+find -name 'haha.py' | xargs rm    # 删除当前目录下名字为haha.py的文件
+find -name '*.py' | xargs grep test      # 找到目录下所有的py文件，然后再筛选出文件内容中包含test的文件
+
+
+cat >文件名：编写文件内容 ctrl+z退出
+cat 文件名：查看文件内容
+
+# 输入输出重定向
+# 输入重定向：输入不来自于键盘，来自于指定文件，改变了输入源
+语法形式：cat<文件名
+
+# 输出重定向：输出不显示在屏幕上，而是写入指定文件
+语法形式：“命令>文件名”
+```
+
