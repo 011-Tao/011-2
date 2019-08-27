@@ -1,0 +1,378 @@
+#### 一、线程简介
+
+##### 1）线程简介
+
+1.python--->编程语言---->开发应用程序
+程序：1.驱动程序，比如显卡驱动程序 2.操作系统，比如windows系统 3.应用程序，比如qq
+
+应用程序，存储在硬盘上的二进制文件，只有被加载到内存空间的时候，它才具备生命周期
+
+进程就是一个运行中的应用程序
+
+每一个进程默认启动一个线程，这个线程叫做主线程，线程属于进程。
+
+##### 2）线程的实现
+
+1.线程模块
+
+```
+Python通过两个标准库_thread 和threading
+提供对线程的支持 , threading对_thread进行了封装。
+threading模块中提供了Thread , Lock , RLock , Condition等组件。
+因此在实际的使用中我们一般都是使用threading
+```
+
+2.Thread
+
+![23](../../../../../../Desktop/Data/Python_note/work.md/photo/23.png)
+
+```
+1.from threading import Thread
+import time
+
+
+def f1(people):
+    print("hello，{}".format(people))
+    time.sleep(3)
+    print("bye")
+
+
+def f2():
+    print("hi")
+    time.sleep(3)
+    print("goodbye")
+
+
+if __name__ == '__main__':
+    # 正常调用，是有先后顺序，主线程
+    # f1()
+    # f2()
+    # 线程操作
+    f1_thread = Thread(target=f1, args=("胡歌",), name='hello')  # 创建了一个线程实例
+    f2_thread = Thread(target=f2, name='hi')   # 实例对象时，函数并未执行
+
+    f1_thread.setName("dai")
+    f1_thread.setName("hu")
+
+    print("f1 name:", f1_thread.getName())
+    print("f2 name:", f2_thread.getName())
+
+    # f1_thread.setDaemon(True)
+    # f2_thread.setDaemon(True)
+
+    # f1_thread.start()   # 调用start方法才开始执行
+    # f2_thread.start()
+
+    # f1_thread.join()  # 阻塞调用，主线程进行等待
+    # f2_thread.join()
+
+    print("主线程执行完毕")
+
+"""
+主线程执行完毕了，但是子线程依然没有关闭，程序一直无法关闭
+守护线程：主线程执行完毕后，程序就关闭
+"""
+
+2.from threading import Thread
+import time
+
+
+# class MyThread(Thread):
+#     def run(self):
+#         print('hello')
+#         time.sleep(3)
+#         print('bye')
+#
+#
+# my_thread = MyThread()  # 创建一个线程实例
+# my_thread.start()
+
+# 重写了类中run方法，通过start方法自动去调用类中的run方法
+
+class MyThread(Thread):
+    def __init__(self, people, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.people = people
+
+    def run(self):
+        print('hello，{}'.format(self.people))
+        time.sleep(3)
+        print('bye')
+
+
+my_thread = MyThread("齐时久", name="hello")  # 创建一个线程实例
+print(my_thread.getName())
+my_thread.start()
+
+
+
+```
+
+3.创建线程
+
+1（在python中创建线程有两种方式,实例Thread类和继承重写Thread类
+
+实例Thread类
+
+2（![24](../../../../../../Desktop/Data/Python_note/work.md/photo/24.png)
+
+3（继承Thread类
+
+![25](../../../../../../Desktop/Data/Python_note/work.md/photo/25.png)
+
+4（Join & setDaemon
+
+```
+在说这两个方法之前 , 需要知道主线程与子线程的概念
+
+主线程 : 当一个程序启动时 , 就有一个线程开始运行 , 该线程通常叫做程序的主线程
+
+子线程 : 因为程序是开始时就执行的 , 如果你需要再创建线程 , 那么创建的线程就是这个主线程的子线程
+
+主线程的重要性体现在两方面 : 
+1. 是产生其他子线程的线程 
+2. 通常它必须最后完成执行比如执行各种关闭操作
+
+```
+
+5（join : 阻塞调用程序 , 直到调用join () 方法的线程执行结束, 才会继续往下执行
+
+![26](../../../../../../Desktop/Data/Python_note/work.md/photo/26.png)
+
+6（setDaemon() 与 join() 基本上是相对的 , join会等子线程执行完毕 ; 而setDaemon则不会等
+
+![27](../../../../../../Desktop/Data/Python_note/work.md/photo/27.png)
+
+#### 二、线程 间的资源共享
+
+##### 1）互斥锁
+
+```
+1.在多线程中 , 所有全局变量对于所有线程都是共享的 , 因此 , 线程之间共享数据最大的危险在于多个线程同时修改一个变量 , 那就乱套了 , 所以我们需要互斥锁 , 来锁住数据。
+
+from threading import Thread, Lock
+
+data = 0
+
+
+def add_1():
+    global data
+    lock.acquire()
+    for i in range(1000000):
+        data += 1
+    lock.release()
+
+
+def red_1():
+    global data
+    lock.acquire()
+    for i in range(1000000):
+        data -= 1
+    lock.release()
+
+
+if __name__ == '__main__':
+    # 正常执行，结果为0
+    # add_1()
+    # red_1()
+    # print(data)
+    lock = Lock()
+    # 线程操作
+    t1 = Thread(target=add_1)
+    t2 = Thread(target=red_1)
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+    print(data)
+
+"""
+data += 1
+x = data + 1
+data = x
+
+data = 0
+t1: x1 = data + 1 # x1 = 0 + 1 = 1
+t2: x2 = data - 1 # x2 = 0 - 1 = -1
+t1: data = x1 = 1
+t2: data = x2 = -1
+
+结果：data = -1
+"""
+```
+
+##### 2）线程间全局变量的共享
+
+1.提示！
+因为线程属于同一个进程，因此它们之间共享内存区域。
+因此全局变量是公共的。
+
+![28](../../../../../../Desktop/Data/Python_note/work.md/photo/28.png)
+
+##### 3）共享内存间存在竞争问题
+
+1.提示！ 
+如果1000000不能出现效果
+可以继续在后面加0
+
+![29](../../../../../../Desktop/Data/Python_note/work.md/photo/29.png)
+
+3.![30](../../../../../../Desktop/Data/Python_note/work.md/photo/30.png)
+
+```
+from threading import Thread
+
+a = 5
+
+
+def f():
+    print('我是子线程，我要修改全局的变量值')
+    global a
+    a = 2
+
+
+if __name__ == '__main__':
+    print('我是主线程，变量a的值是{}'.format(a))
+    t = Thread(target=f)
+    t.start()
+    t.join()
+    print('我是主线程，变量a的值是{}'.format(a))
+
+# 全局变量被所有子线程共享的。资源竞争
+
+```
+
+
+
+##### 4）使用锁来控制共享资源的访问
+
+![31](../../../../../../Desktop/Data/Python_note/work.md/photo/31.png)
+
+##### 5）线程队列操作
+
+1.入队： put(item)
+
+2.出队： get()
+
+```
+from threading import Thread
+from queue import Queue
+from random import randint
+
+my_queue = Queue(10)    # 创建队列对象，指定队列长度
+
+
+def my_put(my_queue):
+    """往队列塞东西"""
+    for x in range(10):
+        num = randint(0, 1000)
+        my_queue.put(num)
+
+
+def my_get(my_queue):
+    """往队列拿东西"""
+    for y in range(3):
+        num = my_queue.get()
+        print(num)
+
+
+p = Thread(target=my_put, args=(my_queue,))
+g = Thread(target=my_get, args=(my_queue,))
+p.start()
+g.start()
+p.join()
+g.join()
+
+```
+
+3.测试空： empty()  # 近似
+
+4.测试满： full()  # 近似
+
+5.队列长度： qsize()  # 近似
+
+6.任务结束： task_done()
+
+```
+from queue import Queue
+
+my_queue = Queue(3)
+
+if __name__ == '__main__':
+    my_queue.put(1)
+    print(my_queue.qsize())
+    my_queue.get()
+    print(my_queue.qsize())
+    print(my_queue.empty())
+    my_queue.put(1)
+    my_queue.put(1)
+    my_queue.put(1)
+    print(my_queue.full())
+    my_queue.task_done()    # 任务结束
+    my_queue.task_done()    # 任务结束
+    my_queue.task_done()    # 任务结束
+    my_queue.task_done()    # 任务结束
+    my_queue.join()  # 等待完成，用来判断task_done的次数是否和put的次数一致
+    print("任务结束")
+    
+    from threading import Thread, current_thread
+from queue import Queue
+import time
+from multiprocessing.pool import ThreadPool
+
+# class ThreadPool(object):
+#     def __init__(self, n):  # 参数n是可重复使用的线程数
+#         # 生成一个队列，里面放任务
+#         self.q = Queue(n)
+#         # 生成线程
+#         for i in range(n):
+#             Thread(target=self.worker, daemon=True).start()
+#
+#     def worker(self):
+#         """实现从队列里取任务完成"""
+#         while True:  # 死循环，这样线程才会一直不结束，一直使用下去
+#             func, args, kwargs = self.q.get()   # 从队列去取任务
+#             func(*args, **kwargs)   # 运行刚得到的任务
+#             self.q.task_done()  # 执行完，通知队列
+#
+#     def put_q(self, func, args=(), kwargs={}):
+#         """实现往队列里放任务"""
+#         self.q.put((func, args, kwargs))
+#
+#     def join_q(self):
+#         self.q.join()   # 阻塞，等待完成
+
+```
+
+7.等待完成： join()
+
+#### 三、线程池
+
+##### 1）池的概念
+
+1.主线程： 相当于生产者，只管向线程池提交任务。
+               并不关心线程池是如何执行任务的。
+               因此，并不关心是哪一个线程执行的这个任务。
+
+2.线程池： 相当于消费者，负责接收任务，
+               并将任务分配到一个空闲的线程中去执行。
+
+3.![32](../../../../../../Desktop/Data/Python_note/work.md/photo/32.png)
+
+##### 2）线程池简单实现
+
+![33](../../../../../../Desktop/Data/Python_note/work.md/photo/33.png)
+
+##### 3）效果实现
+
+![34](../../../../../../Desktop/Data/Python_note/work.md/photo/34.png)
+
+##### 4）python内置线程池
+
+![35](../../../../../../Desktop/Data/Python_note/work.md/photo/35.png)
+
+##### 5）池的其他操作
+
+1.操作一： close - 关闭提交通道，不允许再提交任务
+
+2.操作二： terminate - 中止线程池，中止所有任务 
