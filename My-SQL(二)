@@ -1,0 +1,236 @@
+#### 一、筛选条件
+
+##### 1）数据准备
+
+![1563840734346](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563840734346.png)
+
+##### 2）比较运算符
+
+![1563840830309](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563840830309.png)
+
+```
+select * from student where id>2;
+select * from student where id<>2;
+select * from student where id is not Null;
+```
+
+
+
+##### 3）逻辑运算符
+
+![1563840918916](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563840918916.png)
+
+​                 与                                                   或                                               非
+
+not >  and  >or
+
+```
+select * from student where id=1 and name='fei';
+select * from student where id=1 or name='fei';
+select * from student where not name='fei';
+```
+
+
+
+##### 4)其他操作
+
+![1563841058616](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563841058616.png)
+
+###### 1.排序（order by） 
+
+######  
+
+```
+  select * from student order by class； 
+    select *from student order by class desc；   
+```
+
+######  
+
+###### 2.限制（limit）
+
+```
+  select * from student limit 3;
+  select * from student limit 5,3;
+  
+```
+
+
+
+###### 3.去重（distinct）
+
+```
+select distinct * from student ;
+  
+```
+
+
+
+![1563841577431](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563841577431.png)
+
+###### 4.模糊查询
+
+```
+select * from student where name like 'k%";
+select * from student where name like 'k_";
+  select * from student where name like 'k__";
+```
+
+
+
+###### 5.范围查询
+
+```
+
+```
+
+
+
+#### 二、聚合与分组
+
+##### 1）常用聚合函数
+
+1.统计个数：
+
+```
+count (column)
+select count(name)from student;
+```
+
+2.最大值：
+
+```
+max (column)
+select max(name)from student;
+```
+
+3.最小值：
+
+```
+min（column）
+select min(name)from student;
+```
+
+4.求和：
+
+```
+sum (column)
+select sum(name)from student;
+```
+
+5.平均值：
+
+```
+avg (column)
+select avg(name)from student;
+```
+
+6.列出字段全部值
+
+```
+：group_concat (column)
+select group_concat(name)from student;
+```
+
+
+
+##### 2）分组查询
+
+```
+1.（group by ）    
+  select class from student group by class;
+   select class,group_concat(name) from student group by class;
+```
+
+2.在分组的情况下，只能够出现分组字段和聚合字段
+
+其他的字段没有意义，会报错！
+
+##### 3）聚合筛选
+
+```
+1.（having）   
+select class,group_concat(name) from student where id<5 group by class having class=2;
+select class,group_concat(name) as gg from student where id<5 group by class having class=2;
+```
+
+2.加having条件表达式，可以对输出的结果做出限制
+
+3.一个查询语句中同时包含了别名(as)，聚合函数， where, having      先是执行：where      然后执行：聚合函数和别名     最后执行：having
+
+#### 三、子查询
+
+##### 1）定义
+
+1.将一个查询的结果留下来用于下一次查询 ( select 中嵌套 select )
+
+例如：要求：1)嵌套在查询内部    2)必须始终出现在圆括号内
+
+##### 2）举例
+
+1.求出学生的平均年龄
+
+```
+select avg(age) from student;
+```
+
+2.查找出大于平均年龄的数据
+
+```
+select * from student where age > 18.25;
+```
+
+3.将求出的平均年龄的SQL语句用于查找大于平均年龄的语句中
+
+```
+select * from student where age > (select avg(age) from student);
+```
+
+```
+
+```
+
+
+
+#### 四、连接查询
+
+##### 1）内连接（ inner join）
+
+1.无条件内连接：
+无条件内连接，又名交叉连接/笛卡尔连接
+第一张表种的每一项会和另一张表的每一项依次组合
+
+```
+Mysql> select * from student [inner] join detail;
+
+```
+
+2.有条件内连接：
+在无条件内链接的基础上，加上一个on子句
+当连接的时候，筛选出那些有实际意义的记录来进行组合
+
+```
+Mysql> select * from student inner join detail
+       on student.id =detail.id;
+select student.id,name,age from student  join detail
+       on student.id =detail.id;
+```
+
+##### 2）外连接（{left | right} join）
+
+1.左外连接： （以左表为基准）
+两张表做连接的时候，在连接条件不匹配的时候
+留下左表中的数据，而右表中的数据以NULL填充
+
+```
+mysql>  select student.id,name,age from student right join detail  on student.id =detail.id;
+```
+
+2.右外连接： （以右表为基准）
+对两张表做连接的时候，在连接条件不匹配的时候
+留下右表中的数据，而左表中的数据以NULL填充
+
+```
+mysql>   select student.id,name,age from student left join detail  on student.id =detail.id;
+```
+
