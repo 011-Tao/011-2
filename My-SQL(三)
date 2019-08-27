@@ -1,0 +1,157 @@
+#### 一、表结构修改
+
+![1563923506625](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563923506625.png)
+
+##### 1）修改表名
+
+```
+alter table student rename to py；
+```
+
+##### 2）修改字段名
+
+```
+alter table py change name id py_49 int；
+```
+
+##### 3）修改字段类型
+
+```
+alter table student modify py_49 tinyint；
+```
+
+##### 4）添加字段
+
+```
+alter table student add age tinyint；
+```
+
+##### 5）删除字段
+
+```
+alter table student drop age；
+```
+
+#### 二、约束条件
+
+约束是一种限制，通过对表中的数据做出限制，来确保表中数据的完整性，唯一性
+
+![1563924981868](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563924981868.png)
+
+插入数据的时候，如果没有明确为字段赋值，
+
+则自动赋予默认值
+
+![1563925633102](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563925633102.png)
+
+##### 1）默认约束（default）
+
+```
+alter table tb name varchar（20） default ‘no’；
+insert into tb（name） values（’fei‘）； 
+
+insert into tb values（default，default，17）；
+```
+
+限制一个字段的值不能为空，Insert的时候必须为该字段赋值  空字符不等于NULL
+
+![1563927229682](assets/1563927229682.png)
+
+
+
+##### 2）非空约束（not null）
+
+```
+table table tb modify id int not null default 0；
+```
+
+限制一个字段的值不重复，该字段的数据不能出现重复的  确保字段中值的唯一
+
+![1563927753177](assets/1563927753177.png)
+
+##### 3）唯一约束 （unique key）
+
+```
+create table tb(id int unique key,name varchar(20));
+```
+
+通常每张表都需要一个主键来体现唯一性    每张表里面只能有一个主键  主键  =  非空 + 唯一
+
+![1563928312200](assets/1563928312200.png)
+
+##### 4)主键约束（primary key）
+
+```
+create table tb(id int primary key,name varchar(20));
+```
+
+自动编号，和主键组合使用， 一个表里面只能有一个自增长     auto_increment 要求用在主键上
+
+![1563928401898](assets/1563928401898.png)
+
+##### 5）自增长约束（auto_increment）
+
+```
+create table tb(id int unique key auto_increment,name varchar(20));
+insert into tb values（default，’ff‘）
+```
+
+![1563930016172](assets/1563930016172.png)
+
+##### 6）外键约束(foreign key)
+
+```
+create table a(id int primary key ,name varchar(20));
+create table b(id int primary key ,phone int,foreign key(id) references a(id));
+insert into a values(1,'hh'),(2,'fei'),(3,'liu');
+insert into b values(1,'156489'),(2,'154558611'),(3,'1255588');  先删b表再删a表
+```
+
+#### 三、表关系
+
+![1563931063245](assets/1563931063245.png)
+
+##### 1）一对一
+
+举例，学生表中有学号、姓名、学院，但学生还有些比如电话，家庭住址等比较私密的信息，这些信息不会放在学生表当中，会新建一个学生的详细信息表来存放。
+    这时的学生表和学生的详细信息表两者的关系就是一对一的关系，因为一个学生只有一条详细信息。用主键加主键的方式来实现这种关系。
+
+![1563931961357](assets/1563931961357.png)
+
+一对一 ： 
+用外键的方式，
+把两个表的主键关联
+
+
+
+```
+create table b(id int primary key ,phone int unique key，address varchar(20),foreign key(id) references a(id));
+```
+
+##### 2）一对多
+
+举例，通常情况下，学校中一个学院可以有很多的学生，而一个学生只属于某一个学院。
+    学院与学生之间的关系就是一对多的关系，通过外键关联来实现这种关系。
+
+![1563932022266](assets/1563932022266.png)
+
+```
+alter  table student add foreign key(c_id) references college(id);
+```
+
+
+
+##### 3）多对多
+
+ 举例，学生要报名选修课，一个学生可以报名多门课程，一个课程有很多的学生报名，那么学生表和课程表两者就形成了多对多关系。
+    对于多对多关系，需要创建中间表实现。
+
+![1563932102823](assets/1563932102823.png)
+
+```
+create table a(a_id int primary key auto_increment,
+a_name vachar(20) not null);
+create table b(s_id int,a_id int, primary key(s_id,a_id),foreign key(s_id) references student(id),
+foreign key(aid) references a(a_id));
+```
+
