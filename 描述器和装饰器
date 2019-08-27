@@ -1,0 +1,201 @@
+##### 1）描述符
+
+```
+可以自己去定制你想要怎样访问这个类
+1.class MyAtrribute:   
+def __get__(self, instance, owner):        
+    print('get')    
+def __set__(self, instance, value):        
+    print('set')    
+def __delete__(self, instance):        
+    print('del')
+    
+class MyClass:    
+      m = MyAtrribute()    
+    def __del__(self):        
+        print('instance delete')
+        c = MyClass()
+ c.m
+ c.m = 1
+ del c.m
+这类里面实例化另一个类，对这个实例做访问时，需要定义  __get__  __set__  __delete__  方法
+
+```
+
+2.
+
+```
+class Test1:
+    """这是一个测试类"""
+    def __get__(self, instance, owner):
+        return "__get__"
+
+    def __set__(self, instance, value):
+        print("__set__")
+
+    def __delete__(self, instance):
+        print("___delete__")
+# a = Test1()
+
+
+# 定义第二个类，在第二个类里实例化第一个类
+class Test2:
+    def __init__(self):
+        self.name = "小薛"    # 实例属性
+
+    girl = Test1()  # 上一个类的实例对象我拿来做了这一个类的类属性，这就是描述符
+
+
+c = Test2()
+print(c.name)
+# 查
+print(c.girl)  # 获取对象属性，会去第一个类里面执行__get__方法
+c.girl = 'true'  # 改，会去第一个类里面执行__set__方法
+del c.girl  # 删除，会去第一个类里面执行__delete__方法
+
+# 类里面实例化另一个类，对这个实例做访问的时候，需要定义__get__,__set__,__delete__方法来实现属性的增删改查
+
+
+```
+
+
+
+#### 三，装饰器
+
+##### 1）装饰符
+
+```
+装饰器
+# 闭包：函数里面嵌套函数，外层函数返回内层函数的函数名
+# 装饰器：本质就是闭包。
+# 不修改原函数的前提下，方便的增加函数功能
+
+```
+
+
+
+##### ![1563185167735](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563185167735.png)
+
+2）
+
+![1563185183312](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563185183312.png)
+
+3）![1563185196287](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563185196287.png)
+
+4）![1563185215074](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\1563185215074.png)
+
+##### 2)多层装饰
+
+```
+def outer_0(func):
+    def inner(*args, **kwargs):
+        print("start")
+        func(*args, **kwargs)
+        print("end")
+    return inner
+
+
+def outer(func):
+    def inner(*args, **kwargs):
+        print("在原函数前增加新功能")
+        func(*args, **kwargs)
+        print("在原函数后增加新功能")
+    return inner
+
+
+@outer_0
+@outer  # 表示：1.执行outer函数，并将其下方的函数名作为参数赋值给了out函数2.将outer函数的返回值重新赋值给了下方的函数
+def f1():
+    print("原功能块")
+
+
+f1()
+
+```
+
+#### 四、内置装饰器
+
+##### 1）@outer方法
+
+```
+1.@outer 方法
+def outer(f1):
+    def inner():
+        print("在原函数前增加新功能")
+        f1()
+        return inner
+      
+      @outer    #f1 =outer(f1)
+     def f1()：
+        print("在原函数后增加新功能")
+ f1()  #inner()
+ 
+
+
+```
+
+##### 2）@property 方法
+
+```
+2.@property 方法
+class Reaerl(object):
+    def __init__(self, length, width):
+        self.length = length
+        self.width = width
+
+    @property
+    def gearea(self):
+        return self.length * self.width
+
+
+a = Reaerl(12,3)
+print(a.gearea)   # 用@property装饰器时去除括号
+
+
+```
+
+##### 3）@staticmethod
+
+```
+3.@staticmethod 方法
+
+class Reaerl(object):
+    def __init__(self, length, width):
+        self.length = length
+        self.width = width
+
+    @property
+    def gearea(self):
+        return self.length * self.width
+
+    @staticmethod     #静态方法  可以再函数（）里面不写self 并且可以不用实例化调用
+    def func():
+        print('没有self')
+
+Reaerl.func()
+
+
+```
+
+##### 4)   类当装饰器
+
+```
+4. 类当装饰器
+class TestClass:    # 类当装饰器一定要定义call 方法
+    def __init__(self, func):
+        self.func = func
+
+
+    def __call__(self, *args, **kwargs):
+        print('--cakk--')
+        return self.func()
+
+
+@TestClass
+def aaa():
+    print('你好')
+
+
+aaa()
+```
+
