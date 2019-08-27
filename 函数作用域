@@ -1,0 +1,249 @@
+##### 1.匿名函数
+
+```
+1）
+f = lambda 变量名：返回值
+f()
+filter(lambda x（参数）: x>10, li)
+
+简单函数
+# def f1(): # 不带参数
+#     return 1213
+
+# 等同于
+f1 = lambda: 12123
+
+
+res = f1()
+print(res)
+
+
+# def f2(a1, a2):   # 带参数
+#     return a1 + a2
+
+# 等同于
+f2 = lambda a1, a2: a1 + a2
+
+
+res = f2(5, 6)
+print(res)
+
+# filter(func, li)
+li = [3, 15, 10, 5, 9, 8]
+
+
+# def f1(x):
+#     return x > 8
+# f1 = lambda x: x > 8
+
+print(list(filter(lambda x: x > 8, li)))
+
+2）强化
+# def test(a, b):
+#     result = a + b
+#     return result
+
+test = lambda a, b: a + b
+
+
+num = test(5, 6)
+print(num)
+
+
+def test(a, b, func):
+    res = func(a, b)
+    return res
+
+
+num = test(5, 6, lambda a, b: a + b)
+print("加法：", num)
+num = test(5, 6, lambda a, b: a - b)
+print("减法：", num)
+
+# 实现匿名函数的输入
+# func = input("请输入一个匿名函数：")
+# print(func)
+# print(type(func))
+# eval:返回值/exec：没有返回值
+# func = eval(func)
+# num = test(11, 22, func)
+# print(num)
+
+# 实现输入函数循环执行
+while True:
+    flag = input("继续吗？如果继续请输入y，其他结束")
+    if flag.lower() == 'y':
+        func = input("请输入一个匿名函数：")
+        func = eval(func)
+        num = test(11, 22, func)
+        print(num)
+    else:
+        print("结束运行")
+        break
+
+```
+
+##### 2.函数作用域
+
+```
+1.函数内部定义的变量是局部变量，函数外无法调用--局部作用域
+2.函数外定义的变量是全局变量
+
+1）外部不能访问函数内部变量：
+def   fun1():
+	x = 1
+	return x
+2）函数里面不能修改函数外部变量:
+x = 123
+def  fun3():
+	x = x + 1
+	return x
+3）
+函数内部能够访问函数外部变量:
+x = 123
+def  fun2():
+	print(x)
+	return x + 1
+4）
+函数里面和函数外部变量名相同：
+x = 123
+print(x, id(x))
+def  fun4():
+	x = 456
+	print(x, id(x))
+	x += 1
+	return x
+
+```
+
+```
+1）num = 100   # 全局变量
+
+
+# global：修改全局变量
+def f():
+    # global num  # 声明全局变量，你是全局变量，但是我要修改你了，做好准备。
+    num = 200
+    print("1:", num)
+
+
+print("2:", num)
+f()
+print("3:", num)
+
+
+# nonlocal:函数嵌套时，作用在内层函数的变量，可以修改外层函数的变量
+def f1():
+    num = 66
+
+    def f2():
+        # num = 88
+        nonlocal num
+        num += 1
+        print("1:", num)
+
+    f2()
+    print("2:", num)
+
+
+f1()
+
+2）global 和 nonlocal
+lobal：
+x = 123
+def   fun1():
+	global x
+	x += 1
+	return x
+nonlocal:
+
+def  fun2():
+	x = 123
+	def fun3():
+		nonlocal x
+		x += 1
+		return  x
+	return fun3()
+
+```
+
+##### 总结：
+
+"""
+1.函数内部定义的为局部变量，其作用域是局部作用域，函数外无法调用的
+2.函数外定义的为全局变量，其作用域是全局作用域，如果在函数内想要进行修改，需要global
+3.外层函数的变量，如果想要在内层函数进行修改，需要nonlocal
+"""
+
+##### 3.闭包
+
+1. 函数嵌套流程图![1561383958219](assets/1561383958219.png)
+
+2. 注意：函数名（）----》函数调用，不带括号，函数名可以看做是一个变量
+
+3. 闭包的流程图![1561384765091](assets/1561384765091.png)
+
+   ```
+   1） 函数嵌套
+   def f1():
+       print("外层函数f1")
+   
+       def f2():
+           print("内层函数f2")
+   
+       return f2
+       将内层函数函数体f2返回到外层
+       然后找a=f1() == a =f2
+       a() === f2()   这就是闭包
+       
+   
+   
+   # 注意：函数名（）----》函数调用，不带括号，函数名可以看做是一个变量
+   res = f1()
+   print(res)  # <function f1.<locals>.f2 at 0x00000238E3D4DBF8>
+   res()
+   # 函数里面嵌套函数，外层函数返回内层函数的函数名，这种情况称之为闭包
+   
+   
+   def f1(num1):
+       print(num1)
+   
+       def f2(num2):
+           res = num1 + num2
+           print(res)
+       return f2
+   
+   
+   res = f1(66)
+   res(88)
+   
+   """
+   1.函数内的变量，函数外部访问不了
+   2.函数执行完毕后，函数内的变量会被销毁
+   3.应用场景：如果我们需要在执行完函数后，把函数中的某个变量保存下来
+   4.操作：在函数内部去定义一个函数，用这个内部函数去引用这个变量，同时将内层函数的函数名当做返回值返回，不调用
+   5.这个时候内层函数就讲需要保留的变量给包含在它的内存空间了，这就是闭包
+   """
+   
+   # 外层函数的变量为了在函数执行后依然在内存中保存，我们把变量包在内层函数存放，内层函数不调用，不执行，不释放。
+   
+   2）内嵌函数：
+   def fun1():    
+   	print('fun1()在被调用')    
+   	def fun2():        
+   		print('fun2()在被调用')
+   	fun2()
+   
+   def fx(x):    
+   	x += 1    
+   	def fy(y):        
+   		return x*y    
+   	return fy
+   
+   ```
+
+![38](photo/38.png)
+
+
+
+4.递归函数![1561386666886](asse
